@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Collection\FruitCollection as Fruits;
 use App\Collection\VegetableCollection as Vegetables;
+use App\Criteria\ProduceCriteria as Criteria;
+use App\Dto\ProduceQueryParams as QueryParams;
 use App\Repository\ProduceRepository as Repository;
 use App\Service\StorageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +22,11 @@ class ProduceController extends AbstractController
         Repository $repository
     ): JsonResponse
     {
-        $data = $repository->findAll();
+        $queryParams = QueryParams::fromQuery($request->query->all());
+
+        $criteria = Criteria::fromQueryParams($queryParams);
+
+        $data = $repository->matching($criteria);
 
         return $this->json($data, JsonResponse::HTTP_OK);
     }
