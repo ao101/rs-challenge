@@ -2,8 +2,12 @@
 
 namespace App\Enum;
 
+use App\Enum\Trait\ToArrayTrait;
+
 enum ProduceType: string
 {
+    use ToArrayTrait;
+
     case APPLES   = 'apples';
     case AVOCADO  = 'avocado';
     case BANANAS  = 'bananas';

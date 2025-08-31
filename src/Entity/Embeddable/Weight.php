@@ -23,4 +23,17 @@ class Weight
 
         return $this;
     }
+
+    public static function toUnit(float $weight, WeightUnit $sourceUnit, WeightUnit $targetUnit): float
+    {
+        if ($sourceUnit === $targetUnit) {
+            return $weight;
+        }
+
+        $weightInGrams = $weight * $sourceUnit->toGramsFactor();
+
+        $weightInTargetUnit = $weightInGrams / $targetUnit->toGramsFactor();
+
+        return round($weightInTargetUnit, 2);
+    }
 }
