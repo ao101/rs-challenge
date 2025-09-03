@@ -9,6 +9,12 @@ The architecture of the developed system doesn't resemble the domain model data 
 The architecture uses word "produce" as an abstraction of domain models `Fruit` and `Vegetable`. Produce by dictionary definition stands for *agricultural and other natural products collectively*.
 
 Task description was clear about domain models, therefore, by following the **YAGNI** principle, system works with two persistence models: `Fruit` and `Vegetable`. System can easily be updated in order to add new categories both horizontally (other produce like `fish`, `meat`) and vertically (other categories like `cars`, `clothes`).
+
+### How to use
+
+* `GET` to`/produce` endpoint lists all collections items. It accepts following filters: `name`, `type`, `weight`, `minWeight`, `maxWeight`, `unit`, `search` query paramters.
+* `POST` to `/produce` accepts array of objects, e.g. provided `request.json`, creates collections and saves them to the database.
+
 ### System Features
 1. Names, categories, and units are mapped from request data to appropriate types to ensure data integrity. Example: the system detects an error in `request.json` where *lettuce* is incorrectly categorized as a *fruit*.
 2. Request data can be parsed with **hard** or **soft fails**, where the system either **aborts processing** or **continues with validated data**, respectively.
@@ -17,6 +23,7 @@ Task description was clear about domain models, therefore, by following the **YA
 5. By using `ArrayCollection`, a single filtering service is developed and can be used for querying both in-memory collections (`$collection->matching($filter)`) and the database (`$repository->matching($filter)`).
 6. Weight units are normalized.  Example: `/produce?weight=200000&unit=g` gives the same result as `/produce?weight=20&unit=kg`.
 7. The system is extensible in terms of units and names. It will continue to function if new weight units (e.g. `mg`, `t`) or produce names (e.g. `Zucchinis`, `Raspberries`) are introduced.
+
 
 
 # 🍎🥕 Fruits and Vegetables
