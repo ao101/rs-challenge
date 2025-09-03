@@ -1,3 +1,24 @@
+# Development notes
+
+System uses the Sqlite3 storage engine and Doctrine ORM.
+
+System is upgraded to the latest version 7.3. It uses `ObjectMapper` component marked as experimental. 
+
+The architecture of the developed system doesn't resemble the domain model data found in the `request.json`. This is done on purpose as an excercise of a real-world scenario where incoming data often doesn't map directly to the system's persistence model.
+
+The architecture uses word "produce" as an abstraction of domain models `Fruit` and `Vegetable`. Produce by dictionary definition stands for *agricultural and other natural products collectively*.
+
+Task description was clear about domain models, therefore, by following the **YAGNI** principle, system works with two persistence models: `Fruit` and `Vegetable`. System can easily be updated in order to add new categories both horizontally (other produce like `fish`, `meat`) and vertically (other categories like `cars`, `clothes`).
+### System Features
+1. Names, categories, and units are mapped from request data to appropriate types to ensure data integrity. Example: the system detects an error in `request.json` where *lettuce* is incorrectly categorized as a *fruit*.
+2. Request data can be parsed with **hard** or **soft fails**, where the system either **aborts processing** or **continues with validated data**, respectively.
+3. Since the system uses Doctrine ORM as a core component, `Fruit` and `Vegetable` collections are built on top of Doctrine's `ArrayCollection` class. This class is extended to add `list()` and `search()` methods.
+4. Collections have type checking so that `Fruit` can't end up in a  `VegetableCollection`.
+5. By using `ArrayCollection`, a single filtering service is developed and can be used for querying both in-memory collections (`$collection->matching($filter)`) and the database (`$repository->matching($filter)`).
+6. Weight units are normalized.  Example: `/produce?weight=200000&unit=g` gives the same result as `/produce?weight=20&unit=kg`.
+7. The system is extensible in terms of units and names. It will continue to function if new weight units (e.g. `mg`, `t`) or produce names (e.g. `Zucchinis`, `Raspberries`) are introduced.
+
+
 # 🍎🥕 Fruits and Vegetables
 
 ## 🎯 Goal
@@ -61,3 +82,4 @@ docker run -it -w/app -v$(pwd):/app tturkowski/fruits-and-vegetables bin/phpunit
 docker run -it -w/app -v$(pwd):/app -p8080:8080 tturkowski/fruits-and-vegetables php -S 0.0.0.0:8080 -t /app/public
 # Open http://127.0.0.1:8080 in your browser
 ```
+
